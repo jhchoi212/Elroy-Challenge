@@ -109,6 +109,9 @@ Functions in use:
         
     ##  Returns the refresh rate value to an html.Div so the user can see what they have selected
 
+##############################################################################################################################
+##############################################################################################################################
+
 
     ## Slider to select refresh rate ##
     @app.callback(
@@ -186,6 +189,9 @@ Functions in use:
       ##  Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
       ##  The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
       
+##############################################################################################################################
+##############################################################################################################################
+      
     @app.callback(
         Output(snip_names[0],'figure'),
         Input('serverside-interval', 'n_intervals'),
@@ -202,7 +208,10 @@ Functions in use:
             return dict()
             
      ##  Function return the last 30 seconds of the datastream to the snippit graphs when the current time and the datastream end time are equal
-      
+
+##############################################################################################################################
+##############################################################################################################################
+
     @app.callback(
         [Output(snip_container[0], 'style'),
         Output(snip_container[1], 'style'),
