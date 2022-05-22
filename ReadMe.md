@@ -104,6 +104,21 @@ The app.clientside_callback was used for aspects that needed quicker response ti
              State('input-data', 'data'),
              State('column-names', 'data'),
         )
+        
+   ###### 2:    
+        app.clientside_callback(
+            """
+            function(n_intervals, data) {
+                return data[n_intervals]['time_s']
+            }
+            """,
+            Output('time', 'children'),
+            Input('refreshInterval','n_intervals'),
+            State('input-data', 'data'),
+        )
+        
+        ## Comment this in and comment out the graph update callback above to see the apps ability to refresh at a rate of 100Hz
+
 
 
   ###### GUI functions:
