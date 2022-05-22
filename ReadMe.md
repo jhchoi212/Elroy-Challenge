@@ -68,7 +68,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 
   ###### Data Stream functions:
   
-  1:
+  ###### 1:
   
     @app.callback(
     Output('input-data', 'data'),
@@ -108,7 +108,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 
   ###### GUI functions:
   
-  1:
+   ###### 1:
   
     ## Displays refresh rate ##
     @app.callback(
@@ -122,7 +122,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 
 
 
-  2:
+   ######  2:
   
     ## Slider to select refresh rate ##
     @app.callback(
@@ -138,7 +138,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
         
   ###### Anomaly Detection functions:
   
-  1:
+   ###### 1:
   
     #### Anom Detection ####
     @app.callback(
@@ -175,7 +175,8 @@ The app.clientside_callback was used for aspects that needed quicker response ti
     ##  Returns the first instance of an anomaly detected and displays it on the GUI
   
  ###### Graph dropdown display functions:
-  1:
+ 
+   ###### 1:
   
     ## Disp Container selection ##
     @app.callback(
@@ -203,7 +204,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
       ##  Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
       ##  The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
       
-  2:
+   ###### 2:
       
     @app.callback(
         Output(snip_names[0],'figure'),
@@ -222,7 +223,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
             
      ##  Function return the last 30 seconds of the datastream to the snippit graphs when the current time and the datastream end time are equal
 
-  3:
+   ###### 3:
 
     @app.callback(
         [Output(snip_container[0], 'style'),
@@ -247,7 +248,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
   
 ## 3. Helper file
 
-  1:
+   ###### 1:
 
       import numpy as np
       def anomDetect(data_col, value):
