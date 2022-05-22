@@ -26,20 +26,28 @@ Furthermore, when the datastream has rached its end, the logger will display the
 
 The app contains functions to:   
   isolate anomalies in data, given user input for threshold values on the vehicles maximum maneuvering values,
-      (Found in the helper file called anom_datectionm and in anom detection section)
-      (anom_detection.py and lines 306-339)
+   
+   (Found in the helper file called anom_datectionm and in anom detection section)
+   
+   (anom_detection.py and lines 306-339)
       
   increase or decrease 'live stream' rate or more specifically increase or decrease the refresh rate of the updating date,
-      (Found in GUI interaction section, and in Update graphs section)
-      (Lines 241-303)
+      
+   (Found in GUI interaction section, and in Update graphs section)
+   
+   (Lines 241-303)
       
   and the ability to select single parameters to display, or to display all.
-      (Found in graph Display Dropdown)
-      (lines 343-506)
+  
+   (Found in graph Display Dropdown)
+      
+   (lines 343-506)
 
 Furthermore, before the actual dash app starts running, the input data is sorted and separated into singular input parameters.
-    This means that independent of the input data, the app is able to display any given 4 parameters. 
-    (lines 32-104)
+    
+ This means that independent of the input data, the app is able to display any given 4 parameters. 
+    
+ (lines 32-104)
     
 
 2:Callbacks and Functions
@@ -60,6 +68,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 Functions in use:
 
   Data Stream functions:
+  
   1:
   
     @app.callback(
@@ -99,6 +108,7 @@ Functions in use:
 
 
   GUI functions:
+  
   1:
   
     ## Displays refresh rate ##
