@@ -60,7 +60,8 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 Functions in use:
 
   Data Stream functions:
-    store_data(),
+  
+    store_data()
         Stores data on clientside for clientside callbacks to use.
         
     update_figures()   **** Clientside Callback
@@ -68,6 +69,7 @@ Functions in use:
         This is the only clientside callback and is used exclusivly for the 'live-time' stream
 
   GUI functions:
+  
     disp_ref_rate()
         Returns the refresh rate value to an html.Div so the user can see what they have selected
     
@@ -76,6 +78,7 @@ Functions in use:
         The serverside dcc.Interval is set for 1000ms or 1s
         
   Anomaly Detection functions:
+  
     disp_anom()
       Takes user values for maximum
         Roll Acceleration
@@ -85,6 +88,7 @@ Functions in use:
       Returns the first instance of an anomaly detected and displays it on the GUI
   
   Graph dropdown display functions:
+  
     dropdown_disp()
       Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
       The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
