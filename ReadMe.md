@@ -1,6 +1,6 @@
 # 2022 Elroy Air Airborne Systems Engineer Challenge
 
-##Submission by Jonathan Choi
+## Submission by Jonathan Choi
 
 
 ## Table of Contents
