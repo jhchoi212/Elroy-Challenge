@@ -12,7 +12,7 @@ Table of Contents
 
 
 
-1:App Layout
+1. App Layout
 
 The following flight metrics logger is laid out using the Dash Library
 
@@ -49,7 +49,7 @@ This means that independent of the input data, the app is able to display any gi
     (lines 32-104)
     
 
-2:Callbacks and Functions
+2. Callbacks and Functions
 
 Two types of callbacks were used:
     @app.callback(),
@@ -245,3 +245,21 @@ Functions in use:
              
      ##  Using the same method as the dropdown menu, we block or display the snippit graphs depending if the current time matches the dataset end time. 
   
+3. Helper file
+
+  1:
+
+      import numpy as np
+      def anomDetect(data_col, value):
+            a = np.array(data_col)
+            b = np.append([0], a)
+            a = np.append(a, [0])
+            
+      ## Takes each data column and subtracts the next value from itself 
+
+      diff = np.absolute(b-a)
+      anom_val = np.argwhere(diff[1:len(diff)-1] > value/100)
+      
+      ## Finds values where the difference is larger than input paramter and returns the first instance of anomaly detection
+      return anom_val
+    
