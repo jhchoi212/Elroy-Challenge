@@ -109,32 +109,19 @@ The app.clientside_callback was used for aspects that needed quicker response ti
   ###### GUI functions:
   
    ###### 1:
-  
     ## Displays refresh rate ##
     @app.callback(
-        Output('my-output', 'children'),
+        [Output('my-output', 'children'),
+         Output('refreshInterval', 'interval')
+         ],
         Input('refresh_slider', 'value')
     )
     def disp_ref_rate(value):
-        return f'Refresh Rate: {value} hZ'
-        
-    ##  Returns the refresh rate value to an html.Div so the user can see what they have selected
+        clientInterval = (1/value)*1000
+        return [f'Refresh Rate: {value} hZ', clientInterval]
+    ## returns refresh rate to display and updates Clientside Interval value to the user specified value
 
 
-
-   ######  2:
-  
-    ## Slider to select refresh rate ##
-    @app.callback(
-        Output('refreshInterval', 'interval'),
-        Input('refresh_slider', 'value'),
-        )
-    def update_interval(interval):
-        intervalRateMs = (1/interval)*1000
-        return intervalRateMs
-
-    ##  Updates the dcc.Interval for the clientside callback
-    ##  The serverside dcc.Interval is set for 1000ms or 1s
         
   ###### Anomaly Detection functions:
   
