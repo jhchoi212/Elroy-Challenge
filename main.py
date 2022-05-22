@@ -183,11 +183,6 @@ app.layout = html.Div([
                 ),
             ]),
         html.Div(id='my-output'),
-        html.Div(id='time'),
-        html.Div(id='time-1'),
-        html.Div(id='time-2'),
-        html.Div(id='time-3'),
-
         ],
     ),
 
