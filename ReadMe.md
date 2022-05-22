@@ -69,6 +69,8 @@ Functions in use:
             last_row = n_intervals*100
             stored_data = dataset.iloc[0:last_row]
             return stored_data.to_dict('records')    ## Data stored in Radians ##
+            
+        ## Stores Data on clientside for faster execution
 
         app.clientside_callback(
              """
@@ -79,6 +81,9 @@ Functions in use:
                  [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[2]]]]}, [0], 3000],
                  [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[3]]]]}, [0], 3000]
                  ]
+                 
+            ## This function uses the clientside callback to extend figure data faster than a serverside update.
+            ## This is the only clientside callback and is used exclusivly for the 'live-time' stream
 
              }
              """,
@@ -90,40 +95,132 @@ Functions in use:
              State('input-data', 'data'),
              State('column-names', 'data'),
         )
-        Stores data on clientside for clientside callbacks to use.
-        
-    update_figures()   **** Clientside Callback
-        This function uses the clientside callback to extend figure data faster than a serverside update.
-        This is the only clientside callback and is used exclusivly for the 'live-time' stream
+
 
   GUI functions:
   
-    disp_ref_rate()
-        Returns the refresh rate value to an html.Div so the user can see what they have selected
-    
-    update_interval()
-        Updates the dcc.Interval for the clientside callback
-        The serverside dcc.Interval is set for 1000ms or 1s
+    ## Displays refresh rate ##
+    @app.callback(
+        Output('my-output', 'children'),
+        Input('refresh_slider', 'value')
+    )
+    def disp_ref_rate(value):
+        return f'Refresh Rate: {value} hZ'
+        
+    ##  Returns the refresh rate value to an html.Div so the user can see what they have selected
+
+
+    ## Slider to select refresh rate ##
+    @app.callback(
+        Output('refreshInterval', 'interval'),
+        Input('refresh_slider', 'value'),
+        )
+    def update_interval(interval):
+        intervalRateMs = (1/interval)*1000
+        return intervalRateMs
+
+    ##  Updates the dcc.Interval for the clientside callback
+    ##  The serverside dcc.Interval is set for 1000ms or 1s
         
   Anomaly Detection functions:
   
-    disp_anom()
-      Takes user values for maximum
-        Roll Acceleration
-        Roll Rate
-        Roll Attitude
-      Calls helper function that finds consecutive datapoints that have an absolute difference greater than the input values
-      Returns the first instance of an anomaly detected and displays it on the GUI
+    #### Anom Detection ####
+    @app.callback(
+        [Output('anom-time-0', 'children'),
+        Output('anom-time-1', 'children'),
+        Output('anom-time-2', 'children'),],
+        Input('run-anom', 'n_clicks'),
+        State('pdot-val','value'),
+        State('p-val','value'),
+        State('phi-val','value'),
+
+        )
+    def disp_anom(n_clicks, pdot_value, p_value, phi_value):
+        anom_time_1 = []
+        anom_time_2 = []
+        anom_time_3 = []
+        if n_clicks > 0:
+            for name in column_names:
+               anom_time_1.append(anom_detection.anomDetect(dataset[name], float(pdot_value))[0])
+               anom_time_2.append(anom_detection.anomDetect(dataset[name], float(p_value))[0])
+               anom_time_3.append(anom_detection.anomDetect(dataset[name], float(phi_value))[0])
+
+            return [f'Roll Acceleration Anomaly detected at: {anom_time_1[0]/100} s',
+                    f'Roll Rate Anomaly detected at: {anom_time_2[1]/100} s',
+                    f'Roll Attitude Anomaly detected at: {anom_time_3[2]/100} s']
+        else:
+            return n_clicks
+      
+    ##  Takes user values for maximum
+        ##  Roll Acceleration
+        ##  Roll Rate
+        ##  Roll Attitude
+    ##  Calls helper function that finds consecutive datapoints that have an absolute difference greater than the input values
+    ##  Returns the first instance of an anomaly detected and displays it on the GUI
   
   Graph dropdown display functions:
   
-    dropdown_disp()
-      Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
-      The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
+    ## Disp Container selection ##
+    @app.callback(
+        [Output(container_names[0], 'style'),
+        Output(container_names[1], 'style'),
+        Output(container_names[2], 'style'),
+        Output(container_names[3], 'style'),
+         ],
+        Input('dropdown', 'value'),
+        )
+    def dropdown_Disp(dropdown_val):
+        if dropdown_val == str(column_names[0]):
+            return [{'display':'block'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
+        elif dropdown_val == str(column_names[1]):
+            return [{'display':'none'}, {'display':'block'}, {'display':'none'}, {'display':'none'}]
+        elif dropdown_val == str(column_names[2]):
+            return [{'display':'none'}, {'display':'none'}, {'display':'block'}, {'display':'none'}]
+        elif dropdown_val == str(column_names[3]):
+            return [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'block'}]
+        elif dropdown_val == 'Display All':
+            return [{'display':'block'}, {'display':'block'}, {'display':'block'}, {'display':'block'}]
+        else:
+            return [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
+            
+      ##  Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
+      ##  The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
       
-    pop_snip_i()
-      Function return the last 30 seconds of the datastream to the snippit graphs when the current time and the datastream end time are equal
+    @app.callback(
+        Output(snip_names[0],'figure'),
+        Input('serverside-interval', 'n_intervals'),
+        Input('serverside-interval', 'interval'),
+        )
+    def pop_snip_0(n_intervals, interval):
+        data_len = len(dataset)
+        stopTime = dataset['time_s'][data_len-1]
+        currentTime = (n_intervals*interval)/1000
+
+        if currentTime == stopTime:
+            return snips[0]
+        else:
+            return dict()
+            
+     ##  Function return the last 30 seconds of the datastream to the snippit graphs when the current time and the datastream end time are equal
       
-    snip_disp_i()
-      Using the same method as the dropdown menu, we block or display the snippit graphs depending if the current time matches the dataset end time. 
+    @app.callback(
+        [Output(snip_container[0], 'style'),
+        Output(snip_container[1], 'style'),
+        Output(snip_container[2], 'style'),
+        Output(snip_container[3], 'style'),
+        ],
+        Input('serverside-interval', 'n_intervals'),
+        Input('serverside-interval', 'interval'),
+        )
+    def snip_Disp(n_intervals, interval):
+        data_len = len(dataset)
+        stopTime = dataset['time_s'][data_len-1]
+        currentTime = (n_intervals*interval)/1000
+
+        if currentTime == stopTime:
+            return [{'display':'block'}, {'display':'block'}, {'display':'block'}, {'display':'block'}]
+        else:
+             return [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
+             
+     ##  Using the same method as the dropdown menu, we block or display the snippit graphs depending if the current time matches the dataset end time. 
   
