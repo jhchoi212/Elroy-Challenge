@@ -61,7 +61,35 @@ Functions in use:
 
   Data Stream functions:
   
-    store_data()
+    @app.callback(
+    Output('input-data', 'data'),
+    Input('serverside-interval', 'n_intervals'),
+    )
+        def store_data(n_intervals):
+            last_row = n_intervals*100
+            stored_data = dataset.iloc[0:last_row]
+            return stored_data.to_dict('records')    ## Data stored in Radians ##
+
+        app.clientside_callback(
+             """
+             update_figures(n_intervals, data, name) {
+                 return [
+                 [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[0]]]]}, [0], 3000],
+                 [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[1]]]]}, [0], 3000],
+                 [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[2]]]]}, [0], 3000],
+                 [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[3]]]]}, [0], 3000]
+                 ]
+
+             }
+             """,
+             [Output(graph_names[0], 'extendData'),
+              Output(graph_names[1], 'extendData'),
+              Output(graph_names[2], 'extendData'),
+              Output(graph_names[3], 'extendData'),],
+             Input('refreshInterval','n_intervals'),
+             State('input-data', 'data'),
+             State('column-names', 'data'),
+        )
         Stores data on clientside for clientside callbacks to use.
         
     update_figures()   **** Clientside Callback
