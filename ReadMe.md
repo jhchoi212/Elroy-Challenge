@@ -6,9 +6,9 @@
 ## Table of Contents
 
 1. App layout and Input Processing
-3. Callbacks and functions
-4. Helper File
-5. Current Issues and Works in Progress
+2. Callbacks and functions
+3. Helper File
+4. Current Issues and Works in Progress
 
 
 
@@ -264,3 +264,26 @@ The app.clientside_callback was used for aspects that needed quicker response ti
       ## Finds values where the difference is larger than input paramter and returns the first instance of anomaly detection
       return anom_val
     
+## 4. Current Issues and Works in Progress
+
+###### Current Issues
+
+###### 1.
+Even with the clientside callback updateing the figures, the maximum refresh rate when measured is roughy 10 Hz. 
+
+I have run tests without the updating graphs while just displaying the time using a clientside callback and that can approach a refreshrate of 100 Hz, measured.
+I believe that the extendData function built into dash has an internal limitation to refresh rates that depends on the number of updates.
+
+###### 2.
+I was not able to find a good way to create callback functions in a loop to create an arbitrary number is displays for different parameters
+Though the program can independently extract the data from any CSV file, the actual html coding is not my strong suit and I was not able to create infinite components
+
+###### 3. 
+Currently the program only works in a uniform unit, therefore mixed data in degrees and radians will not give the best display comparison. 
+
+
+###### Works in Progress
+
+###### 1. 
+I would like to add frequency domain analysis but I was unsure of the end goal of the analysis and did not know how to create an open ended frequency domain analysis tool
+
