@@ -288,7 +288,7 @@ app.clientside_callback(
     Output('my-output', 'children'),
     Input('refresh_slider', 'value')
 )
-def disp_refRate(value):
+def disp_ref_rate(value):
     return f'Refresh Rate: {value} hZ'
 
 
@@ -322,7 +322,7 @@ def update_interval(interval):
     State('phi-val','value'),
     
     )
-def dispAnom(n_clicks, pdot_value, p_value, phi_value):
+def disp_anom(n_clicks, pdot_value, p_value, phi_value):
     anom_time_1 = []
     anom_time_2 = []
     anom_time_3 = []
@@ -388,7 +388,7 @@ def dropdown_Disp(dropdown_val):
     Input('serverside-interval', 'n_intervals'),
     Input('serverside-interval', 'interval'),
     )
-def popSnip0(n_intervals, interval):
+def pop_snip_0(n_intervals, interval):
     data_len = len(dataset)
     stopTime = dataset['time_s'][data_len-1]
     currentTime = (n_intervals*interval)/1000
@@ -397,20 +397,6 @@ def popSnip0(n_intervals, interval):
         return snips[0]
     else:
         return dict()
-    
-@app.callback(
-    Output(snip_container[0], 'style'),
-    Input('serverside-interval', 'n_intervals'),
-    Input('serverside-interval', 'interval'),
-    )
-def snip_0_Disp(n_intervals, interval):
-    data_len = len(dataset)
-    stopTime = dataset['time_s'][data_len-1]
-    currentTime = (n_intervals*interval)/1000
-
-    if currentTime == stopTime:
-       return {'display':'block'}
-    return {'display':'none'}
 
 
 #### last 30 second snip and display ####
@@ -419,7 +405,7 @@ def snip_0_Disp(n_intervals, interval):
     Input('serverside-interval', 'n_intervals'),
     Input('serverside-interval', 'interval'),
     )
-def popSnip1(n_intervals, interval):
+def pop_snip_1(n_intervals, interval):
     data_len = len(dataset)
     stopTime = dataset['time_s'][data_len-1]
     currentTime = (n_intervals*interval)/1000
@@ -428,20 +414,6 @@ def popSnip1(n_intervals, interval):
         return snips[1]
     else:
         return dict()
-    
-@app.callback(
-    Output(snip_container[1], 'style'),
-    Input('serverside-interval', 'n_intervals'),
-    Input('serverside-interval', 'interval'),
-    )
-def snip_1_Disp(n_intervals, interval):
-    data_len = len(dataset)
-    stopTime = dataset['time_s'][data_len-1]
-    currentTime = (n_intervals*interval)/1000
-
-    if currentTime == stopTime:
-       return {'display':'block'}
-    return {'display':'none'}
 
 
 #### last 30 second snip and display ####
@@ -450,7 +422,7 @@ def snip_1_Disp(n_intervals, interval):
     Input('serverside-interval', 'n_intervals'),
     Input('serverside-interval', 'interval'),
     )
-def popSnip2(n_intervals, interval):
+def pop_snip_2(n_intervals, interval):
     data_len = len(dataset)
     stopTime = dataset['time_s'][data_len-1]
     currentTime = (n_intervals*interval)/1000
@@ -459,20 +431,6 @@ def popSnip2(n_intervals, interval):
         return snips[2]
     else:
         return dict()
-    
-@app.callback(
-    Output(snip_container[2], 'style'),
-    Input('serverside-interval', 'n_intervals'),
-    Input('serverside-interval', 'interval'),
-    )
-def snip_2_Disp(n_intervals, interval):
-    data_len = len(dataset)
-    stopTime = dataset['time_s'][data_len-1]
-    currentTime = (n_intervals*interval)/1000
-
-    if currentTime == stopTime:
-       return {'display':'block'}
-    return {'display':'none'}
 
 
 #### last 30 second snip and display ####
@@ -481,7 +439,7 @@ def snip_2_Disp(n_intervals, interval):
     Input('serverside-interval', 'n_intervals'),
     Input('serverside-interval', 'interval'),
     )
-def popSnip3(n_intervals, interval):
+def pop_snip_3(n_intervals, interval):
     data_len = len(dataset)
     stopTime = dataset['time_s'][data_len-1]
     currentTime = (n_intervals*interval)/1000
@@ -490,23 +448,26 @@ def popSnip3(n_intervals, interval):
         return snips[3]
     else:
         return dict()
-    
+
+
 @app.callback(
+    [Output(snip_container[0], 'style'),
+    Output(snip_container[1], 'style'),
+    Output(snip_container[2], 'style'),
     Output(snip_container[3], 'style'),
+    ],
     Input('serverside-interval', 'n_intervals'),
     Input('serverside-interval', 'interval'),
     )
-def snip_3_Disp(n_intervals, interval):
+def snip_disp(n_intervals, interval):
     data_len = len(dataset)
     stopTime = dataset['time_s'][data_len-1]
     currentTime = (n_intervals*interval)/1000
 
     if currentTime == stopTime:
-       return {'display':'block'}
-    return {'display':'none'}
-
-
-
+        return [{'display':'block'}, {'display':'block'}, {'display':'block'}, {'display':'block'}]
+    else:
+         return [{'display':'none'}, {'display':'none'}, {'display':'none'}, {'display':'none'}]
     
     
 
