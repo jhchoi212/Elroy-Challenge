@@ -1,9 +1,9 @@
-2022 Elroy Air Airborne Systems Engineer Challenge
+# 2022 Elroy Air Airborne Systems Engineer Challenge
 
-Submission by Jonathan Choi
+###### Submission by Jonathan Choi
 
 
-Table of Contents
+## Table of Contents
 
 1. App layout and Input Processing
 3. Callbacks and functions
@@ -12,7 +12,7 @@ Table of Contents
 
 
 
-1. App Layout
+## 1. App Layout
 
 The following flight metrics logger is laid out using the Dash Library
 
@@ -49,7 +49,7 @@ This means that independent of the input data, the app is able to display any gi
     (lines 32-104)
     
 
-2. Callbacks and Functions
+## 2. Callbacks and Functions
 
 Two types of callbacks were used:
     @app.callback(),
@@ -64,9 +64,9 @@ The app.clientside_callback was used for aspects that needed quicker response ti
     Clientside callbacks store data and execute functions on the browser/clientside. 
     This reduces the time needed to execute functions as the request does not need to bounce between client and server.
 
-Functions in use:
+## Functions in use:
 
-  Data Stream functions:
+  ###### Data Stream functions:
   
   1:
   
@@ -106,7 +106,7 @@ Functions in use:
         )
 
 
-  GUI functions:
+  ###### GUI functions:
   
   1:
   
@@ -136,7 +136,7 @@ Functions in use:
     ##  Updates the dcc.Interval for the clientside callback
     ##  The serverside dcc.Interval is set for 1000ms or 1s
         
-  Anomaly Detection functions:
+  ###### Anomaly Detection functions:
   
   1:
   
@@ -174,7 +174,7 @@ Functions in use:
     ##  Calls helper function that finds consecutive datapoints that have an absolute difference greater than the input values
     ##  Returns the first instance of an anomaly detected and displays it on the GUI
   
-  Graph dropdown display functions:
+ ###### Graph dropdown display functions:
   1:
   
     ## Disp Container selection ##
@@ -245,7 +245,7 @@ Functions in use:
              
      ##  Using the same method as the dropdown menu, we block or display the snippit graphs depending if the current time matches the dataset end time. 
   
-3. Helper file
+## 3. Helper file
 
   1:
 
