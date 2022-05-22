@@ -15,11 +15,9 @@ from dash.dependencies import Input, Output, State
 dataset = pd.read_csv("assets/roll_attitude_frequency_sweep.csv")
 
 
-global intervanRateMs
+#initializes app at 1Hz refresh rate
 intervalRateMs = 1000
 
-frameRateHz = 100
-timeHistoryToDisplay = 30
 
 
 app = dash.Dash(__name__, update_title=None)
@@ -31,6 +29,7 @@ def pull_data(data, i=0):
 
 fig_list = {}
 figure_containers = []
+snips = []
 
 
 column_names = []
@@ -40,22 +39,93 @@ container_names = []
 graph_names = []
 snip_container = []
 snip_names = []
+unit_conversion = [' [Degree/second^2]', ' [Degree/second]', ' [Degrees]']
 
 #### Builds figure dictionaries for any input dataset ####
 for name in dataset.columns.values:
-
-    #### For each column in input data, create a dictionary for that figure
-    temp_dict = dict({
-                "data": [{"x":[],
-                          "y":[]}],
-                "layout" : {"title": {"text": name},
+    unit_index = name.index('_')
+    if name[unit_index:] == '_s':
+        #### For each column in input data, create a dictionary for that figure
+        temp_dict = dict({
+                    "data": [{"x":[],
+                              "y":[]}],
+                    "layout" : {"title": {"text": name},
+                               "xaxis": {"title":"Time [s]"},
+                               "yaxis": {"title": name}
+                               }
+                            })
+        fig_list[name] = temp_dict
+        
+    elif name[unit_index:] == '_rps2':
+        print(name[:unit_index]+unit_conversion[0])
+        #### For each column in input data, create a dictionary for that figure
+        temp_dict = dict({
+                    "data": [{"x":[],
+                              "y":[]}],
+                    "layout" : {"title": {"text": name[:unit_index]},
+                               "xaxis": {"title":"Time [s]"},
+                               "yaxis": {"title": name[:unit_index]+unit_conversion[0]}
+                               }
+                            })
+        snip = dict({
+                "data": [{"x": dataset['time_s'][len(dataset)-3001:len(dataset)].values,
+                          "y": dataset[name][len(dataset)-3001:len(dataset)].values*(180/3.1415)
+                          }],
+                "layout": {"title": {"text": "30 Second Snip"},
                            "xaxis": {"title":"Time [s]"},
-                           "yaxis": {"title": name}
+                           "yaxis": {"title":name[:unit_index]+unit_conversion[0]}
                            }
-                        })
-    fig_list[name] = temp_dict
+                    })
+        fig_list[name] = temp_dict
+        snips.append(snip)
+        
+    elif name[unit_index:] == '_rps':
+        print(name[:unit_index]+unit_conversion[1])
+        #### For each column in input data, create a dictionary for that figure
+        temp_dict = dict({
+                    "data": [{"x":[],
+                              "y":[]}],
+                    "layout" : {"title": {"text": name[:unit_index]},
+                               "xaxis": {"title":"Time [s]"},
+                               "yaxis": {"title": name[:unit_index]+unit_conversion[1]}
+                               }
+                            })
+        snip = dict({
+                "data": [{"x": dataset['time_s'][len(dataset)-3001:len(dataset)].values,
+                          "y": dataset[name][len(dataset)-3001:len(dataset)].values*(180/3.1415)
+                          }],
+                "layout": {"title": {"text": "30 Second Snip"},
+                           "xaxis": {"title":"Time [s]"},
+                           "yaxis": {"title":name[:unit_index]+unit_conversion[1]}
+                           }
+                    })
+        fig_list[name] = temp_dict
+        snips.append(snip)
 
-    
+    elif name[unit_index:] == '_rad':
+        print(name[:unit_index]+unit_conversion[2])
+        #### For each column in input data, create a dictionary for that figure
+        temp_dict = dict({
+                    "data": [{"x":[],
+                              "y":[]}],
+                    "layout" : {"title": {"text": name[:unit_index]},
+                               "xaxis": {"title":"Time [s]"},
+                               "yaxis": {"title": name[:unit_index]+unit_conversion[2]}
+                               }
+                            })
+        snip = dict({
+                "data": [{"x": dataset['time_s'][len(dataset)-3001:len(dataset)].values,
+                          "y": dataset[name][len(dataset)-3001:len(dataset)].values*(180/3.1415)
+                          }],
+                "layout": {"title": {"text": "30 Second Snip"},
+                           "xaxis": {"title":"Time [s]"},
+                           "yaxis": {"title":name[:unit_index]+unit_conversion[2]}
+                           }
+                    })
+        fig_list[name] = temp_dict
+        snips.append(snip)
+
+        
     #### Creates Ids for the live-time containter and figure
     #### and for the snip containter and figure
     cont = str(name)+'-cont'
@@ -76,6 +146,9 @@ for name in dataset.columns.values:
     figure_containers.append(html.Div(id=cont,children = [dcc.Graph(id=graph, figure = fig_list[name])],))
     figure_containers.append(html.Div(id=snip_cont,children = [dcc.Graph(id=snip_graph,figure = {})],))
 
+
+
+
 #### Removes Independent variable data
 del fig_list[pull_data(dataset,0)]
 del figure_containers[0]
@@ -87,21 +160,6 @@ del snip_names[0]
 del column_names[0]
 
 
-
-
-#### Builds last 30 second figure dictionaries for any input dataset ####
-snips = []
-for name in column_names:
-    fig = dict({
-                "data": [{"x": dataset['time_s'][len(dataset)-3001:len(dataset)].values,
-                          "y": dataset[name][len(dataset)-3001:len(dataset)].values
-                          }],
-                "layout": {"title": {"text": "30 Second Snip"},
-                           "xaxis": {"title":"Time [s]"},
-                           "yaxis": {"title":name}
-                           }
-                    })
-    snips.append(fig)
 
 
                              
@@ -252,10 +310,10 @@ app.clientside_callback(
      """
      function(n_intervals, data, name) {
          return [
-         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[0]]]]}, [0], 3000],
-         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[1]]]]}, [0], 3000],
-         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[2]]]]}, [0], 3000],
-         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[3]]]]}, [0], 3000]
+         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[0]]*(180/3.1415)]]}, [0], 3000],
+         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[1]]*(180/3.1415)]]}, [0], 3000],
+         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[2]]*(180/3.1415)]]}, [0], 3000],
+         [{x: [[data[n_intervals]['time_s']]], y: [[data[n_intervals][name[3]]*(180/3.1415)]]}, [0], 3000]
          ]
              
      }
@@ -280,21 +338,24 @@ app.clientside_callback(
 
 ## Displays refresh rate ##
 @app.callback(
-    Output('my-output', 'children'),
+    [Output('my-output', 'children'),
+     Output('refreshInterval', 'interval')
+     ],
     Input('refresh_slider', 'value')
 )
 def disp_ref_rate(value):
-    return f'Refresh Rate: {value} hZ'
+    clientInterval = (1/value)*1000
+    return [f'Refresh Rate: {value} hZ', clientInterval]
 
 
-## Slider to select refresh rate ##
-@app.callback(
-    Output('refreshInterval', 'interval'),
-    Input('refresh_slider', 'value'),
-    )
-def update_interval(interval):
-    intervalRateMs = (1/interval)*1000
-    return intervalRateMs
+#### Slider to select refresh rate ##
+##@app.callback(
+##    Output('refreshInterval', 'interval'),
+##    Input('refresh_slider', 'value'),
+##    )
+##def update_interval(value):
+##    clientInterval = (1/value)*1000
+##    return clientInterval
 
 
 
