@@ -60,6 +60,7 @@ The app.clientside_callback was used for aspects that needed quicker response ti
 Functions in use:
 
   Data Stream functions:
+  1:
   
     @app.callback(
     Output('input-data', 'data'),
@@ -98,6 +99,7 @@ Functions in use:
 
 
   GUI functions:
+  1:
   
     ## Displays refresh rate ##
     @app.callback(
@@ -109,10 +111,10 @@ Functions in use:
         
     ##  Returns the refresh rate value to an html.Div so the user can see what they have selected
 
-##############################################################################################################################
-##############################################################################################################################
 
 
+  2:
+  
     ## Slider to select refresh rate ##
     @app.callback(
         Output('refreshInterval', 'interval'),
@@ -126,6 +128,8 @@ Functions in use:
     ##  The serverside dcc.Interval is set for 1000ms or 1s
         
   Anomaly Detection functions:
+  
+  1:
   
     #### Anom Detection ####
     @app.callback(
@@ -162,6 +166,7 @@ Functions in use:
     ##  Returns the first instance of an anomaly detected and displays it on the GUI
   
   Graph dropdown display functions:
+  1:
   
     ## Disp Container selection ##
     @app.callback(
@@ -189,8 +194,7 @@ Functions in use:
       ##  Takes column titles from CSV file and matches it with dcc.Dropdown value to block selective figures from being displayed on the gui
       ##  The graphs not being displayed are still updated so that if the user decided to view another datastream later, the graph is still up to date
       
-##############################################################################################################################
-##############################################################################################################################
+  2:
       
     @app.callback(
         Output(snip_names[0],'figure'),
@@ -209,8 +213,7 @@ Functions in use:
             
      ##  Function return the last 30 seconds of the datastream to the snippit graphs when the current time and the datastream end time are equal
 
-##############################################################################################################################
-##############################################################################################################################
+  3:
 
     @app.callback(
         [Output(snip_container[0], 'style'),
