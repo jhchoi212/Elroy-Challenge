@@ -17,6 +17,7 @@ Table of Contents
 The following flight metrics logger is laid out using the Dash Library
 
 The flight metrics logger currently displays 4 input data streams from the given csv file.
+
     Roll Acceleration, in radians per second squared
     Roll Rate, in radians per second
     Roll Attitude Command, in radians
@@ -25,29 +26,27 @@ The flight metrics logger currently displays 4 input data streams from the given
 Furthermore, when the datastream has rached its end, the logger will display the last 30 seconds of each data stream on its own respective graph separate from the 'live stream' graphs.
 
 The app contains functions to:   
+
   isolate anomalies in data, given user input for threshold values on the vehicles maximum maneuvering values,
    
-   (Found in the helper file called anom_datectionm and in anom detection section)
-   
-   (anom_detection.py and lines 306-339)
+    (Found in the helper file called anom_datectionm and in anom detection section)
+    (anom_detection.py and lines 306-339)
       
   increase or decrease 'live stream' rate or more specifically increase or decrease the refresh rate of the updating date,
       
-   (Found in GUI interaction section, and in Update graphs section)
-   
-   (Lines 241-303)
+    (Found in GUI interaction section, and in Update graphs section)
+    (Lines 241-303)
       
   and the ability to select single parameters to display, or to display all.
   
-   (Found in graph Display Dropdown)
-      
-   (lines 343-506)
+    (Found in graph Display Dropdown)  
+    (lines 343-506)
 
 Furthermore, before the actual dash app starts running, the input data is sorted and separated into singular input parameters.
     
- This means that independent of the input data, the app is able to display any given 4 parameters. 
+This means that independent of the input data, the app is able to display any given 4 parameters. 
     
- (lines 32-104)
+    (lines 32-104)
     
 
 2:Callbacks and Functions
